@@ -1,7 +1,9 @@
 package com.example.savedata.Model;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +16,15 @@ import org.modelmapper.ModelMapper;
 @NoArgsConstructor
 public class EmployeeDTO {
 
-  private long id;
+  @NotNull(message = "Name should not be null")
+  @NotBlank
   private String name;
+  @NotBlank(message = "Department cannot be blank")
   private String department;
-  private Integer Salary;
+  private String gender;
+  @NotEmpty(message = "Enter valid salary")
+  @Min(value = 1000)
+  private Integer salary;
 
   public static Employee to(EmployeeDTO employeeDTO) {
     ModelMapper mapper = new ModelMapper();
@@ -29,9 +36,4 @@ public class EmployeeDTO {
     return mapper.map(employee, EmployeeDTO.class);
   }
 
-  public static List<EmployeeDTO> mapToEmployeeDto(List<Employee> employeeList) {
-    return employeeList.stream()
-        .map(EmployeeDTO::from)
-        .collect(Collectors.toList());
-  }
 }
